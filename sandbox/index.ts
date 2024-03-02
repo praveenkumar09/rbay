@@ -12,7 +12,7 @@ const run = async () => {
         service:undefined || ''
     })
 
-    const car = await client.hGetAll('car');
+    const car = await client.hGetAll('bike');
     console.log(car);
 };
 run();
