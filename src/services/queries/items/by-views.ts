@@ -10,7 +10,12 @@ export const itemsByViews = async (order: 'DESC' | 'ASC' = 'DESC', offset = 0, c
                 `${itemsKey('*')}->name`,
                 `${itemsKey('*')}->views`,
             ],
-            BY: 'score'
+            BY: 'score',
+            DIRECTION: order,
+            LIMIT : {
+                offset,
+                count
+            }
         }
     );
     console.log(results);
