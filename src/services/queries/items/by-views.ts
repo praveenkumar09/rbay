@@ -10,6 +10,10 @@ export const itemsByViews = async (order: 'DESC' | 'ASC' = 'DESC', offset = 0, c
                 '#',
                 `${itemsKey('*')}->name`,
                 `${itemsKey('*')}->views`,
+                `${itemsKey('*')}->endingAt`,
+                `${itemsKey('*')}->imageUrl`,
+                `${itemsKey('*')}->price`,
+
             ],
             BY: 'score',
             DIRECTION: order,
