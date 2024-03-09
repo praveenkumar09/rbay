@@ -9,3 +9,4 @@ export const itemsKey = (itemId: string) => `items#${itemId}`;
 export const itemsByViewsKey = () => `items:views`;
 export const itemsByEndingSoonestKey = () => `items:endingAt`;
 export const itemsViewsKey = (itemId: string) => `itemss:views#${itemId}`;
+export const bidHistoryKey = (itemId: string) => `history#${itemId}`;
