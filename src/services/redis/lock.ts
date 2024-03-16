@@ -23,10 +23,13 @@ export const withLock = async (key: string,cb : () => any) => {
 	   continue;
 	}
 	//If the set is successfull, then run the callback
-	const result = await cb();
-	//unset the locked set
-	await client.del(lockKey);
-	return result;
+	try{
+		const result = await cb();
+		return result;
+	} finally {
+		//unset the locked set
+		await client.del(lockKey);
+	}
 	}
 };
 
