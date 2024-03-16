@@ -8,11 +8,6 @@ import { withLock } from '$services/redis';
 export const createBid = async (attrs: CreateBidAttrs) => {
 
 	return withLock(attrs.itemId, async () => {
-
-	});
-
-	return client.executeIsolated(async (isolatedClient) => {
-		await isolatedClient.watch(itemsKey(attrs.itemId));
 		const item = await getItem(attrs.itemId);
 	    if(!item){
 		  throw new Error("Item does not exist");
@@ -24,20 +19,20 @@ export const createBid = async (attrs: CreateBidAttrs) => {
 		  throw new Error("Item closed to bidding");
 	    }
 	    const serlializedData = serializeHistory(attrs.amount,attrs.createdAt.toMillis());
-	    return isolatedClient
-		  .multi()
-		  .rPush(bidHistoryKey(attrs.itemId),serlializedData)
-		  .hSet(itemsKey(item.id),{
+	    return Promise.all([
+		  client.rPush(bidHistoryKey(attrs.itemId),serlializedData),
+		  client.hSet(itemsKey(item.id),{
 			bids: item.bids + 1,
 			price : attrs.amount,
 			highestBidUserId : attrs.userId
-		   })
-		   .zAdd(itemsPriceKey(), {
+		   }),
+		   client.zAdd(itemsPriceKey(), {
 			value : item.id,
 			score:attrs.amount
 		   })
-		   .exec();
-	});	
+		]);
+
+	});
 };
 
 export const getBidHistory = async (itemId: string, offset = 0, count = 10): Promise<Bid[]> => {
