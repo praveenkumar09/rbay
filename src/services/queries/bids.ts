@@ -3,8 +3,13 @@ import { bidHistoryKey, itemsKey, itemsPriceKey } from '$services/keys';
 import { client } from '$services/redis';
 import { DateTime } from 'luxon';
 import { getItem } from './items';
+import { withLock } from '$services/redis';
 
 export const createBid = async (attrs: CreateBidAttrs) => {
+
+	return withLock(attrs.itemId, async () => {
+
+	});
 
 	return client.executeIsolated(async (isolatedClient) => {
 		await isolatedClient.watch(itemsKey(attrs.itemId));
